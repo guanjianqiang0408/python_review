@@ -22,5 +22,21 @@ File 对象属性
 文件定位
     tell() 返回文件内当前所处位置
     seek(offset, from) 改变当前文件位置 offset表示移动字节数，from指定开始移动字节的参考位置
+文件操作
+    rename(current_file_name, new_file_name) 重命名
+    remove(file_name) 删除文件
+操作目录
+    Python通过os模块进行目录操作
+    mkdir() 创建目录
+    chdir() 改变当前目录
+    getcwd() 获取当前目录
+    rmdir() 删除目录
 
 """
+print(input("Your name"))
+file = open("test.txt", "r", encoding="utf-8")
+print(file.read())
+# file.close()
+# file.write("aaaaa")
+file.read()
+file.close()
