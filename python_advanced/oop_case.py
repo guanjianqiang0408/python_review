@@ -295,25 +295,136 @@
 
     内置特殊属性
         __slots__
+            该特性可以限制class属性，比如，只允许对Person实例添加指定属性
+            class Person:
+                __slots__ = ("name", "age")
+                def __init__(self, name, age):
+                    self.name = name
+                    self.age = age
+            如果添加限制外的其他属性就会报错
+            该属性作用：
+                省内存，提升属性查找速度，通常用在ORM场景中，
+            为什么会节省内存：
+                类属性是存在__dict__中，是一个哈希表结构，并且python的动态性，意味着需要划分更多的内存保证
+            我们动态的去增减类属性。但是使用__slots__属性后，编译时期就可以预知类属性，以分配固定空间来存储已知
+            属性
 
         __dict__
+            列出类或对象中的所有成员.
+            在python的类中，主要是通过字典来存储类与对象的属性。通过__dict__属性，我们可以获得类中包含的属性字典。
+            class Person(object):
+
+            def __init__(self, name, age):
+                self.name = name
+                self.age = age
+
+
+            p = Person("baozi", 26)
+            print(Person.__dict__)  # 一个包含所有类属性的字典
+            {
+                '__module__': '__main__',
+                '__init__': <function Person.__init__ at 0x7f9dd88b49d8>,
+                '__dict__': <attribute '__dict__' of 'Person' objects>,
+                '__weakref__': <attribute '__weakref__' of 'Person' objects>,
+                '__doc__': None
+            }
+
+            print(p.__dict__)  # 一个包含实例对象所有属性的字典
+            {'name': 'baozi', 'age': 26}
 
         __doc__
+            返回类的注释描述信息
 
         __class__
+            返回当前对象是哪个类的实例
 
         __module__
+            返回当前操作的对象在属于哪个模块
 
     内置装饰器
         @property
+            通过 @property 装饰器，可以直接通过方法名来访问方法，不需要在方法名后添加一对“（）”小括号
+            不加装饰器
+            class Person(object):
+                def __init__(self, name, age):
+                    self._name = name
+                    self._age = age
+
+                def name(self):
+                    return self._name
+
+            p = Person("baozi", 26)
+            print(p.name)
+            # <bound method Person.name of <__main__.Person object at 0x7fb728643dd8>>
+
+            print(p.name())  # 没加装饰器，必须调用函数
+            # baozi
+
+            加装饰器
+            class Person(object):
+                def __init__(self, name, age):
+                    self._name = name
+                    self._age = age
+
+                @property
+                def name(self):
+                    return self._name
+
+            p = Person("baozi", 26)
+            print(p.name)  # 加了装饰器，像访问属性一样，直接访问方法，不用再加()调用
+
+            使用场景是：我们想访问对象属性，又不想属性被修改的时候，就可以使用这个装饰器
+
+            @*.setter 装饰器必须在@property的后面，且两个被修饰的属性（函数）名称必须保持一致。*即为函数名
+
+            使用这两个装饰器，我们就可以做很多事情了。比如：实现密码的密文存储和明文输出、修改属性前判断是否满足条件等等。
+            为两个同名函数打上@*.setter装饰器和@property装饰器后：
+            当把类方法作为属性赋值时会触发@*.setter对应的函数
+            当把类方法作为属性读取时会触发@property对应的函数
 
         @staticmethod
+            类中的方法装饰为静态方法，即类不需要创建实例的情况下，可以通过类名直接引用
+            class Person(object):
+                def __init__(self, name, age):
+                    self._name = name
+                    self._age = age
+
+                # 此方法只能是类的实例调用
+                def talk(self):
+                    print(f"name is {self._name} age is {self._age}")
+
+                # 此方法没有就像普通的函数一样，直接通过 Person.talk()就可以直接调用
+                @staticmethod
+                def static_talk(name, age): # 这里无需再传递self，函数不用再访问类
+                    print(f"name is {name} age is {age}")
+
+            p = Person("baozi", 26) # 正常
+            p.static_talk("baozi", 26)  # 报错，该方法是个静态方法，不能通过实例访问
+            Person.static_talk("baozi", 60) # 正常
+            Person.talk() # 报错，这个方法没有被修饰，只能被实例访问，不能被类访问
+
 
         @classmethod
+            这个装饰器修饰的方法是类方法，而不是实例方法。这句话是什么意思呢？我们常规定义的方法，都属于实例方法，必须要先创建实例以后，才能调用。但是类方法，无需实例化就可以访问。
+            类方法的第一个参数是类本身，而不是实例
+            class Person(object):
+                def __init__(self, name, age):
+                    self._name = name
+                    self._age = age
 
+                @classmethod
+                def static_talk(cls, name, age):
+                    print(f"name is {name} age is {age}")
+
+            Person.static_talk("baozi", 60)
+            我们 @classmethod修饰的函数，多了一个参数 cls，这个参数跟我们的self可不一样，self指的是当前实例，而我们的cls指的是当前的类。
+                @classmethod修饰的方法需要通过cls参数传递当前类对象，它可以访问类属性，不能访问实例属性
+                @staticmethod修饰的方法定义与普通函数是一样的，它不可以访问类属性，也不能访问实例属性
 
     理解OOP，总结
+        此时我们发现，我们的str、int、dict、list、tuple这些其实本质上都是一个对象。针对不同的数据结构，它们自己重写了自己的一套内置方法来实现不同的功能。
+        比如字典 dict["key"] 的取值方式就是实现了我们之前介绍的：__setitem__、__getitem__....
+        比如我们的字符串"hello,world"，它不是一个静态的字符串，他也是一个对象，他也有很多内置方法，我们能看到"hello,world"，是因为它实现了__str__()
+        读到这里，相信有一些小伙伴可能已经有所感悟，相信只要永远秉持着这个理念去写代码。你们一定会突飞猛进的。
 
-
-        https://zhuanlan.zhihu.com/p/437925568
 """
