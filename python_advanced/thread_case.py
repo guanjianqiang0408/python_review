@@ -31,16 +31,14 @@ Python线程
             为了让守护线程执行结束后，主线程在结束，可以使用join方法，让主线程等待子线程执行
         多线程共享全局变量
             线程是进程的执行单元，进程是系统分配资源的最小单元，所以在同一个进程中的多线程是共享资源的
-        互斥锁
+        互斥锁（同步锁）
             避免多个线程同时修改同一条数据时可能出现脏数据，所以出现了线程锁。即同一时刻允许一个线程执行操作。线程锁用于锁定资源。
             由于线程间是进行随机调度，如果有多个线程同时操作一个对象，如果没有保护好被调用对象，会造成程序结果不可预期，即“线程不安全”，为了避免这种情况
         就出现了互斥锁
 
-        同步锁
-            todo
-
-        队列
-            todo
+        死锁
+            python中，线程间共享多个资源时，如果两个线程分别占有一部分资源并且同时等待对方资源，就会造成死锁，因为系统判断这部分资源都正在被使用，
+        所以这两个线程都无外力作用下将一直等待下去
 
         递归锁
             RLock和Lock用法一摸一样，但它支持嵌套，在多个锁没有释放的时候一般使用RLock
@@ -55,6 +53,15 @@ Python线程
                 is_set 判断是否设置了flag
                 wait 会一直监听flag，如果没有检测到flag就一直处于阻塞状态
             事件处理机制：全局定义一个flag，当flag为False，event.wait()就会阻塞，当flag为True，event.wait()便不在阻塞
+
+        队列
+            一般用在生产者和消费者模型上
+            生产者消费者模型：
+                为什么要使用生产者和消费者模式
+                在python线程中，生产者就是生产数据的线程，消费者就是消费数据的线程。在多线程开发当中，如果生产者处理速度很快，而消费者处理速度很慢，那么生产者就必须等待消费者处理完，才能继续生产数据。同样的道理，如果消费者的处理能力大于生产者，那么消费者就必须等待生产者。为了解决这个问题于是引入了生产者和消费者模式。
+            什么是生产者消费者模式
+                生产者消费者模式是通过一个容器来解决生产者和消费者的强耦合问题。生产者和消费者彼此之间不直接通讯，而通过阻塞队列来进行通讯，所以生产者生产完数据之后不用等待消费者处理，直接扔给阻塞队列，消费者不找生产者要数据，而是直接从阻塞队列里取，阻塞队列就相当于一个缓冲区，平衡了生产者和消费者的处理能力。
+
 
     GIL(Global Interpreter Lock) 全局解释器锁
         非python环境中，单核情况下，同时只能有一个任务执行。多核时可以支持多个线程同时执行。但是在python中，无论多少核，同时
@@ -204,6 +211,54 @@ def call_lock():
         p.join()
 
 
+# 死锁
+lock_apple = threading.Lock()
+lock_banana = threading.Lock()
+
+
+class MyThread(threading.Thread):
+    def __init__(self):
+        threading.Thread.__init__(self)
+
+    def run(self):
+        self.fun1()
+        self.fun2()
+
+    def fun1(self):
+        # 如果锁被占用，会阻塞在这里，等待锁的释放
+        lock_apple.acquire()
+        print(f"thread: {self.name} 想拿: 苹果--{ time.ctime()} ")
+        lock_banana.acquire()
+        print(f"thread: {self.name} 想拿: 香蕉--{ time.ctime()} ")
+        lock_banana.release()
+        lock_apple.release()
+
+    def fun2(self):
+        lock_banana.acquire()
+        print(f"thread: {self.name} 想拿: 香蕉--{time.ctime()} ")
+        lock_apple.acquire()
+        print(f"thread: {self.name} 想拿: 苹果--{time.ctime()} ")
+        lock_apple.release()
+        lock_banana.release()
+
+    """
+        上述代码死锁执行流程：
+         fun1 中，线程1先拿了苹果，然后拿了香蕉，然后释放香蕉和苹果，然后再在fun2中又拿了香蕉,sleep 0.1秒
+         在线程1的执行过程中，线程2进入了，因为苹果被线程1释放了，线程2这时候获得了苹果，然后想拿香蕉
+         这时候就出现问题了，线程1拿完香蕉后想拿苹果，发现苹果被线程2拿到了，线程2拿到苹果之后，想拿香蕉，发现香蕉被线程1持有了
+         双向等到，出现死锁，代码阻塞
+        死锁出现原因。就是在同一线程中多次请求同一资源时出现的问题
+    """
+
+
+def run_died_lock():
+    # 创建10个线程
+    for i in range(10):
+        # 类继承法是python多线程的另外一种实现方式
+        MyThread().start()
+
+
+
 # 递归锁
 gl_num = 0
 rlock = threading.RLock()
@@ -284,6 +339,51 @@ def didi_func():
     car.start()
 
 
+# 队列
+import time,random
+import queue,threading
+
+q = queue.Queue()
+
+
+def Producer(name):
+  count = 0
+  while count < 10:
+    print("制造包子ing")
+    time.sleep(random.randrange(3))
+    q.put(count)
+    print('生产者 %s 生产了 %s 包子..' %(name, count))
+    count += 1
+
+
+def Consumer(name):
+  count = 0
+  while count < 10:
+    time.sleep(random.randrange(4))
+    if not q.empty():
+        data = q.get()
+        print(data)
+        print('消费者 %s 消费了 %s 包子...' %(name, data))
+    else:
+        print("包子吃完了")
+    count += 1
+
+
+def pc_mode():
+    c1 = threading.Thread(target=Producer, args=('小明',))
+    c2 = threading.Thread(target=Consumer, args=('小花',))
+    c3 = threading.Thread(target=Consumer, args=('小灰',))
+    c1.start()
+    c2.start()
+    c3.start()
+
+    c1.join()
+    c2.join()
+    c3.join()
+
+    print('结束')
+
+
 if __name__ == '__main__':
     # call_thread_function()
     # call_custome_thread()
@@ -293,4 +393,6 @@ if __name__ == '__main__':
     # call_lock()
     # call_rlock()
     # call_simple_variable()
-    didi_func()
+    # didi_func()
+    # run_died_lock()
+    pc_mode()
