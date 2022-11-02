@@ -24,7 +24,13 @@ from blog import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.index),
+    path('', views.index, name="index"),
+    # 添加列表，内容， 标签，搜索，联系我们的路由
+    path('list-<int:lid>.html', views.list, name='list'),
+    path('show-<int:sid>.html', views.show, name='show'),
+    path('tag/<tag>', views.tag, name='tags'),
+    path('s/', views.search, name='search'),
+    path('about/', views.about, name='about'),
     # 添加DjagoUeditor路由
     path("ueditor/", include("DjangoUeditor.urls")),
     re_path("^media/(?P<path>.*)$", serve, {"document_root": settings.MEDIA_ROOT})

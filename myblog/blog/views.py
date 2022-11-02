@@ -8,11 +8,31 @@ def hello(request):
     return HttpResponse("欢迎Django")
 
 
+# 首页
 def index(request):
-    # 更多ORM操作文章参见https://www.django.cn/course/show-18.html and https://www.django.cn/course/show-31.html
-    articles = Article.objects.all()
-    # 封装上下文
-    context = {
-      "articles": articles
-    }
-    return render(request, "index.html", context)
+    pass
+
+
+# 列表
+def list(request, lid):
+    pass
+
+
+# 内容
+def show(request, sid):
+    pass
+
+
+# 标签
+def tag(request, tag):
+    pass
+
+
+#搜索
+def search(request):
+    pass
+
+
+# 关于我们
+def about(request):
+    pass
