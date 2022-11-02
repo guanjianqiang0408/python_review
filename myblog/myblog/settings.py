@@ -39,7 +39,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     # 添加自定义APP应用
-    "blog.apps.BlogConfig"
+    "blog.apps.BlogConfig",
+    # 添加富文本应用
+    "DjangoUeditor"
 ]
 
 MIDDLEWARE = [

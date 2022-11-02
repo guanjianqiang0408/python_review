@@ -1,7 +1,7 @@
 from django.db import models
 # 导入Django自带的User模型
 from django.contrib.auth.models import User
-
+from DjangoUeditor.models import UEditorField
 
 # Create your models here.
 # 文章分类
@@ -50,7 +50,19 @@ class Article(models.Model):
     # 外键关联标签表，多对多关系
     tags = models.ManyToManyField(Tag, verbose_name="标签", blank=True)
     img = models.ImageField(upload_to="article_img/%Y/%m/%d", verbose_name="文章图片", blank=True, null=True)
-    body = models.TextField()
+    # body = models.TextField()
+    body = UEditorField(
+        "内容",
+        width=800,
+        height=500,
+        toolbars="full",
+        imagePath="upimg/",
+        filePath="upfile/",
+        upload_settings={"imageMaxSize": 120400},
+        settings={},
+        command=None,
+        blank=True
+    )
     # 外键关联用户表，一对多关系
     user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="作者")
     views = models.PositiveIntegerField("阅读量", default=0)
