@@ -5,18 +5,15 @@
     <title>MyBlog</title>
 </head>
 <body>
-    <h3>网站名: {{ sitename }}</h3>
-    <h3>域名: {{ url }}</h3>
     <ul>
         <h4>Blog教程目录</h4>
-        {% for item in step_list %}
-        <li>{{ item }}</li>
-        {% endfor%}
-    </ul>
-    <ul>
-        <h4>Blog教程作者信息</h4>
-        {% for key, value in info_dict.items %}
-        <li>{{ key }}: {{ value }}</li>
+        {% for article in articles %}
+        <li>
+            标题: {{ article.title }}<br />
+            栏目: {{ article.category }}<br />
+            作者: {{ article.user }}<br />
+            时间: {{ article.created_time }}<br />
+        </li>
         {% endfor%}
     </ul>
 
