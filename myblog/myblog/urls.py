@@ -24,7 +24,7 @@ from blog import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.hello),
+    path('', views.index),
     # 添加DjagoUeditor路由
     path("ueditor/", include("DjangoUeditor.urls")),
     re_path("^media/(?P<path>.*)$", serve, {"document_root": settings.MEDIA_ROOT})
