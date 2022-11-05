@@ -52,9 +52,21 @@ def list(request, lid):
         list = paginator.page(paginator.num_pages)
     return render(request, "list.html", locals())
 
+
 # 内容
 def show(request, sid):
-    pass
+    show = Article.objects.get(id=sid)
+    allcategory = Category.objects.all()
+    tags = Tag.objects.all()
+    remen = Article.objects.filter(tui__id=2)[:6]
+    # 随机推荐
+    hot = Article.objects.all().order_by("?")[:10]
+    previous_blog = Article.objects.filter(created_time__gt=show.created_time, category=show.category.id).first()
+    next_blog = Article.objects.filter(created_time__lt=show.created_time, category=show.category.id).last()
+    # 增加文章浏览数
+    show.views = show.views + 1
+    show.save()
+    return render(request, "show.html", locals())
 
 
 # 标签
