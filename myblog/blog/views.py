@@ -107,4 +107,5 @@ def search(request):
 
 # 关于我们
 def about(request):
-    pass
+    allcategory = Category.objects.all()
+    return render(request, 'page.html', locals())
