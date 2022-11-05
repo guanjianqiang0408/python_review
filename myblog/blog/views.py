@@ -89,7 +89,20 @@ def tag(request, tag):
 
 #搜索
 def search(request):
-    pass
+    ss = request.GET.get("search")
+    list = Article.objects.filter(title__icontains=ss)
+    remen = Article.objects.filter(tui__id=2)[:6]
+    allcategory = Category.objects.all()
+    page = request.GET.get("page")
+    tags = Tag.objects.all()
+    paginator = Paginator(list, 10)
+    try:
+        list = paginator.page(page)
+    except PageNotAnInteger:
+        list = paginator.page(1)
+    except EmptyPage:
+        list = paginator.page(paginator.num_pages)
+    return render(request, "search.html", locals())
 
 
 # 关于我们
