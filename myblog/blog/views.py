@@ -71,7 +71,20 @@ def show(request, sid):
 
 # 标签
 def tag(request, tag):
-    pass
+    list = Article.objects.filter(tags__name=tag)
+    remen = Article.objects.filter(tui__id=2)[:6]
+    allcategory = Category.objects.all()
+    tname = Tag.objects.get(name=tag)
+    page = request.GET.get("page")
+    tags = Tag.objects.all()
+    paginator = Paginator(list, 5)
+    try:
+        list = paginator.page(page)
+    except PageNotAnInteger:
+        list = paginator.page(1)
+    except EmptyPage:
+        list = paginator.page(paginator.num_pages)
+    return render(request, "tags.html", locals())
 
 
 #搜索
