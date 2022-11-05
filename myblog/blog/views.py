@@ -1,3 +1,4 @@
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.shortcuts import render
 from django.http import HttpResponse
 from .models import Article, Category, Banner, Tag, Link
@@ -35,8 +36,21 @@ def index(request):
 
 # 列表
 def list(request, lid):
-    pass
-
+    list = Article.objects.filter(category_id=lid)
+    cname = Category.objects.get(id=lid)
+    remen = Article.objects.filter(tui__id=2)[:6]
+    allcategory = Category.objects.all()
+    tags = Tag.objects.all()
+    # 分页处理
+    page = request.GET.get("page")
+    paginator = Paginator(list, 5)
+    try:
+        list = paginator.page(page)
+    except PageNotAnInteger:
+        list = paginator.page(1)
+    except EmptyPage:
+        list = paginator.page(paginator.num_pages)
+    return render(request, "list.html", locals())
 
 # 内容
 def show(request, sid):

@@ -80,8 +80,7 @@
             <h4 class="post-right-title">热门文章排行</h4>
             <ol class="hot-list">
                 {% for hot_article in hot_articles %}
-                <li><a href="{% url 'index' %}show-{{ hot_article.id }}.html" title="{{ hot_article.title }}">{{
-                    hot_article.title }}</a></li>
+                <li><a href="{% url 'index' %}show-{{ hot_article.id }}.html" title="{{ hot_article.title }}">{{ hot_article.title }}</a></li>
                 {% endfor %}
             </ol>
         </section>
