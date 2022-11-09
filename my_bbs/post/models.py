@@ -31,6 +31,10 @@ class Topic(BaseModel):
     # 外键关联User模型
     user = models.ForeignKey(to=User, to_field='id', on_delete=models.CASCADE, help_text="话题关联用户表")
 
+    class Meta:
+        verbose_name = "话题"
+        verbose_name_plural = verbose_name
+
     def __str__(self):
         return f"{self.id}: {self.title[:20]}"
 
@@ -44,6 +48,10 @@ class Comment(BaseModel):
     topic = models.ForeignKey(to=Topic, to_field='id', on_delete=models.CASCADE, help_text="话题标题")
     up = models.IntegerField(default=0, help_text="支持")
     down = models.IntegerField(default=0, help_text="反对")
+
+    class Meta:
+        verbose_name = "评论"
+        verbose_name_plural = verbose_name
 
     def __str__(self):
         # id 属性如果model中没有主动指定逐渐的情况，Django会自动添加一个主键
