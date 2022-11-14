@@ -10,4 +10,6 @@ urlpatterns = [
     path("topic/<int:topic_id>/", views.topic_detail_view),
     path("topic_comment/", views.add_comment_to_topic_view),
     path("", views.hello_django, name="hello"),
+    path("search_topic_form/", views.search_topic_form),
+    path("search_topic/", views.search_topic),
 ]

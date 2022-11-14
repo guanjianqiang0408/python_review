@@ -7,6 +7,24 @@ from post.models import Topic, Comment
 from post.post_service import build_topic_base_info, build_topic_detail_info, add_comment_to_topic
 
 
+def search_topic(request):
+    if not request.GET.get("title", ""):
+        # return HttpResponse("title is invalid")
+        errors = {"title is invalid"}
+        return render(request, "post/search_topic.html", context={"errors": errors})
+    topic_queryset = Topic.objects.filter(title__contains=request.GET.get("title"))
+    return render(request, "post/topic_list.html", context={"topics": topic_queryset})
+
+
+def search_topic_form(request):
+    """
+     form view function
+    :param request:
+    :return:
+    """
+    return render(request, "post/search_topic.html")
+
+
 def project_signature(request):
     """
     自定义处理器函数

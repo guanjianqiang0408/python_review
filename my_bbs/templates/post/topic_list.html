@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Topic List</title>
+</head>
+<body>
+{% for topic in topics %}
+    <ul>
+        <li>title: {{ topic.title }}</li>
+        <li>created_time: {{ topic.created_time }}</li>
+        <li>username: {{ topic.user.username }}</li>
+    </ul>
+{% endfor %}
+</body>
+</html>
