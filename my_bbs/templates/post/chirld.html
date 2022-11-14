@@ -1,0 +1,13 @@
+<!--
+子模版继承父模板
+语法{%extend 'post/base.html'%}
+
+模板继承是模板系统中最强大也是最复杂的功能，它的用途非常广泛。通常，如果是在多个模板中出现了大量的重复代码，
+那么，就应该考虑使用模板继承来减少重复性代码
+-->
+{%extend 'post/base.html'%}
+{% block title%} 重写了父模板title {%endblock%}
+
+{% block content%}
+{% block super %}获取父亲模板内容后进行拓展内容{% endblock %}
+{%endblock%}

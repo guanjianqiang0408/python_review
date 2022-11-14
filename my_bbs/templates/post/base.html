@@ -1,0 +1,16 @@
+<!--
+模板继承
+{%block xxx%} 这里编辑的内容会被子类继承或重写 {%endblock%}
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{%block title%} Title {% endblock %}</title>
+</head>
+<body>
+  {%block content%} ConTent {%endblock%}
+  {%block footer%} Footer {%endblock%}
+</body>
+</html>

@@ -1,9 +1,27 @@
 # 引入HttpResponse, 作为视图的返回类型
 from django.http import HttpResponse, JsonResponse
+from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 
 from post.models import Topic, Comment
 from post.post_service import build_topic_base_info, build_topic_detail_info, add_comment_to_topic
+
+
+def project_signature(request):
+    """
+    自定义处理器函数
+    :param request:
+    :return:
+    """
+    return {"project": "Django BBS"}
+
+
+def hello_django(request):
+    """
+    :param request:
+    :return:
+    """
+    return render(request, "post/hello_django.html")
 
 
 def topic_list_view(request):
