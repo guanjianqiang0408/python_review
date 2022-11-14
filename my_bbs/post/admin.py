@@ -12,7 +12,7 @@ class TopicAdmin(admin.ModelAdmin):
     raw_id_fields = ("user",)
 
     # 指定只读，不可修改的属性内容
-    readonly_fields = ("user", "title", "content_length")
+    # readonly_fields = ("user", "title", "content_length")
 
     # 分页管理
     list_per_page = 5
@@ -46,19 +46,19 @@ class TopicAdmin(admin.ModelAdmin):
 
     content_length.short_description = "话题内容长度"
 
-    def save_model(self, request, obj, form, change):
-        """
-        该函数允许用户操作数据保存前后做一些自定义的操作内容
-        :param request:
-        :param obj:
-        :param form:
-        :param change:
-        :return:
-        """
-        if change and "is_online" in form.changed_data and not obj.is_online:
-            self.message_user(request, "Topic: {} 被管理员删除了".format(obj.id))
-            obj.title = "{}({})".format(obj.title, "管理员删除")
-            super(TopicAdmin, self).save_model(request, obj, form, change)
+    # def save_model(self, request, obj, form, change):
+    #     """
+    #     该函数允许用户操作数据保存前后做一些自定义的操作内容
+    #     :param request:
+    #     :param obj:
+    #     :param form:
+    #     :param change:
+    #     :return:
+    #     """
+    #     if change and "is_online" in form.changed_data and not obj.is_online:
+    #         self.message_user(request, "Topic: {} 被管理员删除了".format(obj.id))
+    #         obj.title = "{}({})".format(obj.title, "管理员删除")
+    #         super(TopicAdmin, self).save_model(request, obj, form, change)
 
     # def get_queryset(self, request):
     #     """
