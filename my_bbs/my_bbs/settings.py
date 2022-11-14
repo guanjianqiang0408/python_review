@@ -37,8 +37,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+<<<<<<< HEAD
 
     'post'
+=======
+>>>>>>> 821b8b34626bb0100f17ca2d8ca76b5183c25c1c
 ]
 
 MIDDLEWARE = [
@@ -56,7 +59,11 @@ ROOT_URLCONF = 'my_bbs.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
+<<<<<<< HEAD
         'DIRS': ["templates"],
+=======
+        'DIRS': [],
+>>>>>>> 821b8b34626bb0100f17ca2d8ca76b5183c25c1c
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -64,8 +71,11 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+<<<<<<< HEAD
                 # 添加自定义处理器为全局
                 'post.views.project_signature'
+=======
+>>>>>>> 821b8b34626bb0100f17ca2d8ca76b5183c25c1c
             ],
         },
     },
@@ -77,6 +87,7 @@ WSGI_APPLICATION = 'my_bbs.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 
+<<<<<<< HEAD
 # 配置mysql数据库
 DATABASES = {
     'default': {
@@ -84,6 +95,12 @@ DATABASES = {
         'OPTIONS': {
             'read_default_file': os.path.join(BASE_DIR, "my.cnf")
         }
+=======
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+>>>>>>> 821b8b34626bb0100f17ca2d8ca76b5183c25c1c
     }
 }
 
@@ -109,16 +126,27 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.0/topics/i18n/
+<<<<<<< HEAD
 # 修改默认语言和失去
 LANGUAGE_CODE = 'zh-Hans'
 
 TIME_ZONE = 'Asia/Shanghai'
+=======
+
+LANGUAGE_CODE = 'en-us'
+
+TIME_ZONE = 'UTC'
+>>>>>>> 821b8b34626bb0100f17ca2d8ca76b5183c25c1c
 
 USE_I18N = True
 
 USE_L10N = True
 
+<<<<<<< HEAD
 USE_TZ = False
+=======
+USE_TZ = True
+>>>>>>> 821b8b34626bb0100f17ca2d8ca76b5183c25c1c
 
 
 # Static files (CSS, JavaScript, Images)

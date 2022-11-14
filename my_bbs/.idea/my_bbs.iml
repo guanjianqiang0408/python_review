@@ -2,7 +2,11 @@
 <module type="PYTHON_MODULE" version="4">
   <component name="NewModuleRootManager">
     <content url="file://$MODULE_DIR$" />
+<<<<<<< HEAD
     <orderEntry type="jdk" jdkName="Python 3.7 (django_env)" jdkType="Python SDK" />
+=======
+    <orderEntry type="jdk" jdkName="Python 3.6 (bbsenv)" jdkType="Python SDK" />
+>>>>>>> 821b8b34626bb0100f17ca2d8ca76b5183c25c1c
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
 </module>

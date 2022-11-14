@@ -14,6 +14,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
+<<<<<<< HEAD
 from django.urls import path, include
 
 urlpatterns = [
@@ -21,4 +22,10 @@ urlpatterns = [
     # 这样配置，以post/开头的请求都会交给post应用的url配置处理
     # 实现了根据APP分发不同的请求。配置清晰，便于维护
     path('post/', include("post.urls")),
+=======
+from django.urls import path
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+>>>>>>> 821b8b34626bb0100f17ca2d8ca76b5183c25c1c
 ]
