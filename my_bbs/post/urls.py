@@ -12,4 +12,5 @@ urlpatterns = [
     path("", views.hello_django, name="hello"),
     path("search_topic_form/", views.search_topic_form),
     path("search_topic/", views.search_topic),
+    path("topic_model_form/", views.topic_model_form),
 ]

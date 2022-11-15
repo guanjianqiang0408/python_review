@@ -1,5 +1,7 @@
 from django import forms
 
+from post.models import Topic
+
 
 class TopicSearchForm(forms.Form):
     """
@@ -24,4 +26,12 @@ class TopicSearchForm(forms.Form):
             raise forms.ValidationError("字符串长度太短")
         return title
 
+
+class TopicModelForm(forms.ModelForm):
+    """
+    ModelForm使用
+    """
+    class Meta:
+        model = Topic
+        exclude = ("is_online", "user")
 

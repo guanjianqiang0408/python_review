@@ -5,7 +5,28 @@ from django.views.decorators.csrf import csrf_exempt
 
 from post.models import Topic, Comment
 from post.post_service import build_topic_base_info, build_topic_detail_info, add_comment_to_topic
-from post.forms import TopicSearchForm
+from post.forms import TopicSearchForm, TopicModelForm
+
+
+def topic_model_form(request):
+    if request.method == "POST":
+        topic = TopicModelForm(request.POST)
+        if topic.is_valid():
+            # topic = Topic.objects.create(
+            #     title=topic.cleaned_data.get("title"),
+            #     content=topic.cleaned_data.get("content"),
+            #     user=request.user
+            # )
+
+            ## 如果commit设置为False，则不会创建数据到数据库, 默认为True
+            topic = topic.save(commit=False)
+            topic.user = request.user
+            topic.save()
+            return topic_detail_view(request, topic.id)
+        else:
+            return render(request, 'post/topic_model_form.html', context={"form": topic})
+    else:
+        return render(request, 'post/topic_model_form.html', context={"form": TopicModelForm()})
 
 
 def search_topic(request):
