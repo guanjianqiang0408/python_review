@@ -5,15 +5,16 @@ from django.views.decorators.csrf import csrf_exempt
 
 from post.models import Topic, Comment
 from post.post_service import build_topic_base_info, build_topic_detail_info, add_comment_to_topic
+from post.forms import TopicSearchForm
 
 
 def search_topic(request):
-    if not request.GET.get("title", ""):
-        # return HttpResponse("title is invalid")
-        errors = {"title is invalid"}
-        return render(request, "post/search_topic.html", context={"errors": errors})
-    topic_queryset = Topic.objects.filter(title__contains=request.GET.get("title"))
-    return render(request, "post/topic_list.html", context={"topics": topic_queryset})
+    form = TopicSearchForm(request.GET)
+    if form.is_valid():
+        topic_queryset = Topic.objects.filter(title__contains=form.cleaned_data.get("title"))
+        return render(request, 'post/topic_list.html', context={"topics": topic_queryset})
+    else:
+        return render(request, "post/search_topic.html", context={"form": form})
 
 
 def search_topic_form(request):
@@ -22,7 +23,8 @@ def search_topic_form(request):
     :param request:
     :return:
     """
-    return render(request, "post/search_topic.html")
+    form = TopicSearchForm()
+    return render(request, "post/search_topic.html", context={"form": form})
 
 
 def project_signature(request):
